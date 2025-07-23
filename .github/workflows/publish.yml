@@ -1,0 +1,53 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish-pro:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'zhongliang001' }}
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.17.1
+          registry-url: https://registry.npmjs.com/
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+      - name: Build
+        run: pnpm build     
+      - name: Set npm registry and auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > $GITHUB_WORKSPACE/.npmrc
+
+      - name: Check npm registry
+        run: npm config get registry
+
+      - name: Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm run version    # 执行版本升级命令（生成 CHANGELOG 和更新版本号）
+          commit: 'chore: update versions' # 版本更新后的提交信息
+          title: 'chore: update versions'  # 创建版本提交的标题
+          publish: pnpm run release    # 执行实际发布命令
+          createGithubReleases: false      # 不自动创建 GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
