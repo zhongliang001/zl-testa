@@ -45,7 +45,7 @@ jobs:
           version: pnpm run version    # 执行版本升级命令（生成 CHANGELOG 和更新版本号）
           commit: 'chore: update versions' # 版本更新后的提交信息
           title: 'chore: update versions'  # 创建版本提交的标题
-          publish: pnpm publish    # 执行实际发布命令
+          publish: pnpm publish  --access public   # 执行实际发布命令
           createGithubReleases: false      # 不自动创建 GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
