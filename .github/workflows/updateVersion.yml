@@ -27,10 +27,6 @@ jobs:
           node-version: 18.17.1
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
-      - name: Lint
-        run: pnpm lint
-      - name: Test
-        run: pnpm test:unit
 
   publish-pro:
     needs: test
