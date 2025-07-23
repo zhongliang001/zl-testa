@@ -54,7 +54,6 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm run version
-          publish: pnpm exec changeset
           commit: 'chore: update versions' # 版本更新后的提交信息
           title: 'chore: update versions'  # 创建版本提交的标题
         env:
