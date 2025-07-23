@@ -1,7 +1,7 @@
 {
   "name": "zl-testa",
-  "version": "0.0.0",
-  "private": false,
+  "version": "0.0.2",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
